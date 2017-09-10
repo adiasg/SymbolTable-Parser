@@ -9,6 +9,7 @@ struct symbolListEntry {
 };
 
 void printSymbolList(struct symbolListEntry *head);
+void symbolList_freeList(struct symbolListEntry *head);
 struct symbolListEntry* symbolList_findEntry(struct symbolListEntry *head,  const char *id);
 struct symbol* symbolList_getSymbol(struct symbolListEntry *head,  const char *id);
 struct symbolListEntry* symbolList_insertEntry(struct symbolListEntry *head, struct symbol symbol);

@@ -70,9 +70,15 @@ struct symbolTable* symbolTable_addChild(struct symbolTable* symbolTable) {
 }
 
 struct symbolTable* symbolTable_deleteChild(struct symbolTable* symbolTable) {
+    //printf("symbolTable_deleteChild()\n");
     struct symbolTable *parentSymbolTable = symbolTable_getParent(symbolTable);
-    symbolTableList_deleteEntry(parentSymbolTable->childSymbolTableListHead, symbolTable);
+    if(parentSymbolTable!=NULL) {
+        symbolTableList_deleteEntry(parentSymbolTable->childSymbolTableListHead, symbolTable);
+    }
+    //printf("symbolTableList_freeList()\n");
     symbolTableList_freeList(symbolTable->childSymbolTableListHead);
+    //printf("symbolList_freeList()\n");
+    symbolList_freeList(symbolTable->symbolListHead);
     return parentSymbolTable;
 }
 
@@ -88,7 +94,7 @@ void symbolTable_deleteSymbol(struct symbolTable *symbolTable, const char *id) {
     symbolTable->symbolListHead = symbolList_deleteEntry(symbolTable->symbolListHead, id);
 }
 
-void symbolTable_insert(struct symbolTable *symbolTable, const char *id, enum type type, enum kind kind) {
+void insert(struct symbolTable *symbolTable, const char *id, enum type type, enum kind kind) {
     struct symbol symbol;
     initializeSymbol(&symbol, id, type, kind);
     symbolTable_insertSymbol(symbolTable, symbol);

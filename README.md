@@ -1,4 +1,4 @@
-# <center>Symbol Table and Parser</center>
+# Symbol Table and Parser
 
 ## Description
 This is an implementation of symbol table and parser for an assignment of CSF302 (Principles of Programming Languages) at BITS-Pilani, KK Birla Goa Campus.  

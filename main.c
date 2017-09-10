@@ -1,129 +1,154 @@
 #include "symbol.h"
 #include "symbolList.h"
 #include "symbolTable.h"
+#include "test.h"
 #include <stdlib.h>
+#include <string.h>
 
 // <id,type,kind>
 
-void testSymbol() {
-    printf("Test for symbol.h\n");
-    struct symbol s1, s2, s3;
-    initializeSymbol(&s1, "testVar", INT, variable);
-    initializeSymbol(&s2, "testVar2", INT, variable);
-    initializeSymbol(&s3, "testVar", INT, variable);
-    printf("s1: "); printSymbol(&s1);
-    printf("s2: "); printSymbol(&s2);
-    printf("s3: "); printSymbol(&s3);
-    printf("symbolcmp(s1,s2):%d\n", symbolcmp(s1,s2));
-    printf("symbolcmp(s1,s3):%d\n", symbolcmp(s1,s3));
-
-    printf("symbolcmp_id(s1,s2):%d\n", symbolcmp_id(s1,s2));
-    printf("symbolcmp_id(s1,s3):%d\n", symbolcmp_id(s1,s3));
-
-    printf("symbolCheckId(s1,\"testVar\"):%d\n", symbolCheckId(s1,"testVar"));
-    printf("symbolCheckId(s1,\"testVar2\"):%d\n", symbolCheckId(s1,"testVar2"));
-    printf("------------------------------------------\n");
+void printAvailableInputs() {
+    printf("Choose from the following inputs:\n");
+    printf("\t");
+    printf("symbol\t- Enter <id,type,kind> for a symbol\n");
+    printf("\t");
+    printf("enter\t- Enter a new scope\n");
+    printf("\t");
+    printf("exit\t- Exit current scope\n");
 }
 
-void testSymbolList() {
-    printf("Test for symbolList.h\n");
+enum inputType{ENTER, SYMBOL, EXIT};
 
-    struct symbol symbols[10];
-    initializeSymbol(&symbols[0], "id[0]", INT, variable);
-    initializeSymbol(&symbols[1], "id[1]", INT, variable);
-    initializeSymbol(&symbols[2], "id[2]", INT, variable);
-    initializeSymbol(&symbols[3], "id[3]", INT, variable);
-    initializeSymbol(&symbols[4], "id[4]", INT, variable);
-    initializeSymbol(&symbols[5], "id[5]", INT, variable);
-    initializeSymbol(&symbols[6], "id[6]", INT, variable);
-    initializeSymbol(&symbols[7], "id[7]", INT, variable);
-    initializeSymbol(&symbols[8], "id[8]", INT, variable);
-    initializeSymbol(&symbols[9], "id[9]", INT, variable);
-
-    struct symbolListEntry *head = NULL;
-
-    for(int i=0; i<10; i++) {
-        head = symbolList_insertEntry(head, symbols[i]);
+enum inputType getInputType() {
+    static char inputType[7];
+    while(1) {
+        printf("Enter input: ");
+        scanf(" %s", inputType);
+        if(!strcmp(inputType, "enter")) {
+            printf("You entered: ENTER\n");
+            return ENTER;
+        }
+        else if(!strcmp(inputType, "exit")) {
+            printf("You entered: EXIT\n");
+            return EXIT;
+        }
+        else if(!strcmp(inputType, "symbol")) {
+            printf("You entered: SYMBOL\n");
+            return SYMBOL;
+        }
+        printf("Invalid input\n");
     }
-
-    printSymbolList(head);
-    symbolList_insertEntry(head, symbols[2]);
-
-    printf("\n");
-    printSymbol(symbolList_getSymbol(head, "id[0]"));
-    printSymbol(symbolList_getSymbol(head, "id[5]"));
-    printSymbol(symbolList_getSymbol(head, "id[7]"));
-    printf("\n");
-
-    printf("Deleteing id[3]\n");
-    head = symbolList_deleteEntry(head, "id[3]");
-    printSymbolList(head);
-
-    printf("Deleteing id[0]\n");
-    head = symbolList_deleteEntry(head, "id[0]");
-    printSymbolList(head);
-
-    printf("Deleteing id[9]\n");
-    head = symbolList_deleteEntry(head, "id[9]");
-    printSymbolList(head);
-
-    printf("Deleteing id[7]\n");
-    head = symbolList_deleteEntry(head, "id[7]");
-    printSymbolList(head);
-
-    printf("Get id[7]\n");
-    printSymbol(symbolList_getSymbol(head, "id[7]"));
-
-    printf("------------------------------------------\n");
 }
 
-void testSymbolTable() {
-    printf("Test for symbolTable.h\n");
+enum type getType() {
+    static const char *typeString[] = {"INT", "FLOAT", "DOUBLE", "BOOL"};
+    char input[7];
+    int i;
 
-    struct symbol symbols[10];
-    initializeSymbol(&symbols[0], "id[0]", INT, variable);
-    initializeSymbol(&symbols[1], "id[1]", INT, variable);
-    initializeSymbol(&symbols[2], "id[2]", INT, variable);
-    initializeSymbol(&symbols[3], "id[3]", INT, variable);
-    initializeSymbol(&symbols[4], "id[4]", INT, variable);
-    initializeSymbol(&symbols[5], "id[5]", INT, variable);
+    printf("\tEnter type: ");
+    scanf(" %s", input);
+    //printf("\tYou entered: %s\n", input);
+    for(i=0; i<4; i++) {
+        if(!strcmp(input, typeString[i])) {
+            return (enum type)i;
+        }
+    }
+    while(i==4) {
+        //printf("\tYou entered: %s\n", input);
+        printf("\tEnter valid type: ");
+        scanf(" %s", input);
+        for(i=0; i<4; i++) {
+            if(!strcmp(input, typeString[i])) {
+                return (enum type)i;
+            }
+        }
+    }
+    return (enum type)0;
+}
 
+enum kind getKind() {
+    static const char *kindString[] = {"variable", "function", "parameter"};
+    char input[9];
+    int i;
+
+    printf("\tEnter kind: ");
+    scanf(" %s", input);
+    //printf("\tYou entered: %s\n", input);
+    for(i=0; i<3; i++) {
+        if(!strcmp(input, kindString[i])) {
+            return (enum kind)i;
+        }
+    }
+    while(i==3) {
+        //printf("\tYou entered: %s\n", input);
+        printf("\tEnter valid kind: ");
+        scanf(" %s", input);
+        for(i=0; i<3; i++) {
+            if(!strcmp(input, kindString[i])) {
+                return (enum kind)i;
+            }
+        }
+    }
+    return (enum kind)0;
+}
+
+struct symbol getSymbol() {
+    struct symbol *symbol = (struct symbol*)malloc(sizeof(struct symbol));
+    char id[7];
+    enum type type;
+    enum kind kind;
+
+    printf("\tEnter id: ");
+    scanf(" %s", id);
+    //printf("\tYou entered: %s\n", id);
+
+    type = getType();
+    kind = getKind();
+
+    initializeSymbol(symbol, id, type, kind);
+    return *symbol;
+}
+
+void takeUserInput() {
     struct symbolTable *symbolTable = (struct symbolTable*)malloc(sizeof(struct symbolTable));
     symbolTable->symbolListHead = NULL;
     symbolTable->parentSymbolTable = NULL;
     symbolTable->childSymbolTableListHead = NULL;
+    enum inputType input;
+    struct symbol *symbol;
+    while(symbolTable!=NULL) {
+        printAvailableInputs();
+        input = getInputType();
+        if(input==EXIT) {
+            symbolTable = exit_scope(symbolTable);
+        }
+        else if(input==ENTER) {
+            symbolTable = enter_scope(symbolTable);
+        }
+        else if(input==SYMBOL) {
+            symbol = (struct symbol*)malloc(sizeof(struct symbol));
+            char id[7];
+            enum type type;
+            enum kind kind;
+            printf("\tEnter id: ");
+            scanf(" %s", id);
+            type = getType();
+            kind = getKind();
+            initializeSymbol(symbol, id, type, kind);
+            printSymbol(symbol);
+            symbolTable_insertSymbol(symbolTable, *symbol);
+        }
 
-    printf("Parent Symbol Table:\n");
-    for(int i=0; i<3; i++) {
-        symbolTable_insertSymbol(symbolTable, symbols[i]);
+        if(symbolTable!=NULL) {
+            printSymbolList(symbolTable->symbolListHead);
+        }
     }
-    printSymbolList(symbolTable->symbolListHead);
-
-    printf("Child Symbol Table:\n");
-    symbolTable = enter_scope(symbolTable);
-    for(int i=3; i<6; i++) {
-        symbolTable_insertSymbol(symbolTable, symbols[i]);
-    }
-    printSymbolList(symbolTable->symbolListHead);
-
-    printf("lookup id: id[1] in child\n");
-    printSymbol(lookup(symbolTable, "id[1]"));
-
-    symbolTable = exit_scope(symbolTable);
-    printf("Parent Symbol Table:\n");
-    printSymbolList(symbolTable->symbolListHead);
-
-    printf("lookup id: id[1] in parent\n");
-    printSymbol(lookup(symbolTable, "id[1]"));
-    printf("lookup id: id[45] in parent\n");
-    printSymbol(lookup(symbolTable, "id[45]"));
-
-    printf("------------------------------------------\n");
 }
 
 int main() {
-    testSymbol();
-    testSymbolList();
-    testSymbolTable();
+    //testSymbol();
+    //testSymbolList();
+    //testSymbolTable();
+    takeUserInput();
     return 0;
 }

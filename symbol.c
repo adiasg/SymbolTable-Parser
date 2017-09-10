@@ -1,13 +1,16 @@
 #include "symbol.h"
+#include <stdlib.h>
 #include <string.h>
 
 static const char *typeString[] = {"INT", "FLOAT", "DOUBLE", "BOOL"};
 static const char *kindString[] = {"variable", "function", "parameter"};
 
 void initializeSymbol(struct symbol *symbol, const char *id, enum type type, enum kind kind) {
-    symbol->id = id;
-    symbol->type = type;
-    symbol->kind = kind;
+    char *symbolId = (char*)malloc(sizeof(id));
+    memcpy(symbolId, id, strlen(id));
+    symbol->id = symbolId;
+    memcpy(&(symbol->type),&type,sizeof(type));
+    memcpy(&(symbol->kind),&kind,sizeof(kind));
 }
 
 const char* typeToString(enum type type) {

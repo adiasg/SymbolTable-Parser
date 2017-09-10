@@ -1,5 +1,6 @@
 #include "symbolList.h"
 #include <stdlib.h>
+#include <string.h>
 
 void printSymbolList(struct symbolListEntry *head) {
     printf("SymbolList:\n");
@@ -9,6 +10,20 @@ void printSymbolList(struct symbolListEntry *head) {
         head = head->nextEntry;
     }
     //printf("\n");
+}
+
+void symbolList_freeList(struct symbolListEntry *head) {
+    if(head==NULL) {
+        return;
+    }
+    struct symbolListEntry *next;
+    next = head->nextEntry;
+    while(head!=NULL) {
+        //free(&(head->symbol));
+        next = head->nextEntry;
+        free(head);
+        head = next;
+    }
 }
 
 static struct symbolListEntry* initializeEntry(struct symbol symbol) {
