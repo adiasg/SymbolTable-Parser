@@ -14,6 +14,7 @@ struct symbol {
 };
 
 void initializeSymbol(struct symbol *symbol, const char *id, enum type type, enum kind kind);
+//void freeSymbol(struct symbol *symbol);
 const char* typeToString(enum type type);
 const char* kindToString(enum kind kind);
 void printSymbol(struct symbol *symbol);

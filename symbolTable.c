@@ -9,17 +9,9 @@ struct symbolTableListEntry* symbolTableListEntry_initializeEntry() {
 }
 
 struct symbolTableListEntry* symbolTableList_insertEntry(struct symbolTableListEntry *head) {
-    if(head==NULL) {
-        head = symbolTableListEntry_initializeEntry();
-    }
-    else {
-        struct symbolTableListEntry *headTemp = head;
-        while(headTemp->nextEntry!=NULL) {
-            headTemp = headTemp->nextEntry;
-        }
-        headTemp->nextEntry = symbolTableListEntry_initializeEntry();
-    }
-    return head;
+    struct symbolTableListEntry *headTemp = symbolTableListEntry_initializeEntry();
+    headTemp->nextEntry = head;
+    return headTemp;
 }
 
 struct symbolTableListEntry* symbolTableList_deleteEntry(struct symbolTableListEntry *head, struct symbolTable *symbolTable) {
@@ -64,6 +56,7 @@ struct symbolTable* symbolTable_getParent(struct symbolTable* symbolTable) {
 struct symbolTable* symbolTable_addChild(struct symbolTable* symbolTable) {
     struct symbolTableListEntry *childSymbolTableListEntry;
     childSymbolTableListEntry = symbolTableListEntry_initializeEntry();
+    symbolTable->childSymbolTableListHead = symbolTableList_insertEntry(childSymbolTableListEntry);
     struct symbolTable *childSymbolTable = (struct symbolTable*)childSymbolTableListEntry->entry;
     childSymbolTable->parentSymbolTable = symbolTable;
     return childSymbolTable;
@@ -123,5 +116,5 @@ struct symbolTable* enter_scope(struct symbolTable* symbolTable) {
 }
 
 struct symbolTable* exit_scope(struct symbolTable* symbolTable) {
-    return symbolTable_deleteChild(symbolTable);
+    return symbolTable_getParent(symbolTable);
 }

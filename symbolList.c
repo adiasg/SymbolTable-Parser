@@ -4,12 +4,14 @@
 
 void printSymbolList(struct symbolListEntry *head) {
     printf("SymbolList:\n");
+    if(head==NULL) {
+        printf("\tNo symbols\n");
+    }
     while(head!=NULL) {
         printf("\t");
         printSymbol(&(head->symbol));
         head = head->nextEntry;
     }
-    //printf("\n");
 }
 
 void symbolList_freeList(struct symbolListEntry *head) {
@@ -49,25 +51,15 @@ struct symbol* symbolList_getSymbol(struct symbolListEntry *head,  const char *i
 }
 
 struct symbolListEntry* symbolList_insertEntry(struct symbolListEntry *head, struct symbol symbol) {
-    //printf("symbolList_insertEntry() for symbol: "); printSymbol(&symbol);
     if(symbolList_findEntry(head, symbol.id)!=NULL) {
         printf("******************** ERROR! ********************\n");
         printf("symbolListEntry with id: %s already present\n", symbol.id);
         printf("************************************************\n");
         return head;
     }
-    //printf("Entry not found in list\n");
-    if(head==NULL) {
-        head = initializeEntry(symbol);
-    }
-    else {
-        struct symbolListEntry *headTemp = head;
-        while(headTemp->nextEntry!=NULL) {
-            headTemp = headTemp->nextEntry;
-        }
-        headTemp->nextEntry = initializeEntry(symbol);
-    }
-    return head;
+    struct symbolListEntry *headTemp = initializeEntry(symbol);
+    headTemp->nextEntry = head;
+    return headTemp;
 }
 
 struct symbolListEntry* symbolList_deleteEntry(struct symbolListEntry *head, const char *id) {

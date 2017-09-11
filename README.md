@@ -5,12 +5,24 @@ This is an implementation of symbol table and parser for an assignment of CSF302
 
 The symbol table has been designed for the semantic analysis stage of the compiler.
 
-## Types and constructs
+## Symbols
++ A symbol is defined to be a set containing `id`, `type`, and `kind`
++ `struct symbol` is defined as
+    ```C
+    struct symbol {
+        const char* id;
+        enum type type;
+        enum kind kind;
+    };
+    ```
+
+### Types and constructs
++ Identifier is restricted to `char[32]`
 + Types are restricted to {`INT`, `FLOAT`, `DOUBLE`, `BOOL`}
 + Constructs are restricted to {`variable`, `function`, `parameter`}
-+ `enum type` and `enum kind` has been defined in `symbol.h`
++ `enum type` and `enum kind` have been defined in `symbol.h`
 
-## Functions
+### Functions
 + Functions are assumed to have up to two parameters
 
 ## Instructions
