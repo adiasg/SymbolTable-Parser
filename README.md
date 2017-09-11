@@ -1,5 +1,6 @@
 # Symbol Table and Parser
-
+GitHub repository: https://github.com/adiasg/SymbolTable-Parser  
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ## Description
 This is an implementation of symbol table and parser for an assignment of CSF302 (Principles of Programming Languages) at BITS-Pilani, KK Birla Goa Campus.  
 
